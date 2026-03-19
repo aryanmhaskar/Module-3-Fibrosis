@@ -1,6 +1,5 @@
 '''Module 3: count black and white pixels and compute the percentage of white pixels in a .jpg image and extrapolate points'''
 
-from termcolor import colored
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -55,10 +54,10 @@ for x in range(len(filenames)):
 
 # Print the number of white and black pixels in each image.
 
-print(colored("Counts of pixel by color in each image", "yellow"))
+print("Counts of pixel by color in each image", "yellow")
 for x in range(len(filenames)):
-    print(colored(f"White pixels in image {x}: {white_counts[x]}", "white"))
-    print(colored(f"Black pixels in image {x}: {black_counts[x]}", "black"))
+    print(f"White pixels in image {x}: {white_counts[x]}", "white")
+    print(f"Black pixels in image {x}: {black_counts[x]}", "black")
     print()
 
 # Calculate the percentage of pixels in each image that are white and make a list that contains these percentages for each filename
@@ -70,9 +69,9 @@ for x in range(len(filenames)):
 
 # Print the filename (on one line in red font), and below that line print the percent white pixels and depth into the lung where the image was obtained
 
-print(colored("Percent white px:", "yellow"))
+print("Percent white px:", "yellow")
 for x in range(len(filenames)):
-    print(colored(f'{filenames[x]}:', "red"))
+    print(f'{filenames[x]}:', "red")
     print(f'{white_percents[x]}% White | Depth: {depths[x]} microns')
     print()
 
