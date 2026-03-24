@@ -6,6 +6,9 @@ in .jpg images, and write results to a .csv file.
 import cv2
 import numpy as np
 import pandas as pd
+import time
+
+start_time = time.perf_counter()
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
@@ -75,6 +78,11 @@ df.to_csv(OUTPUT_CSV, index=False)
 print("\n" + "=" * 60)
 print(f"Results written to '{OUTPUT_CSV}'")
 print("=" * 60)
+
+end_time = time.perf_counter()
+elapsed_time = end_time - start_time
+
+print(f"Code block took: {elapsed_time:.4f} seconds")
 
 
 ##############
