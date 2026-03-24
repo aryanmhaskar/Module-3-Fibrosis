@@ -6,6 +6,8 @@ in .jpg images, and write results to a .csv file.
 import cv2
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
 import time
 
 start_time = time.perf_counter()
@@ -84,51 +86,45 @@ elapsed_time = end_time - start_time
 
 print(f"Code block took: {elapsed_time:.4f} seconds")
 
+# ── Extract depths and white percentages from results ─────────────────────────
+depths = [r["Depth (microns)"] for r in results]
+white_percents = [r["White percent"] for r in results]
 
-##############
-# LECTURE 2: UNCOMMENT BELOW
+# ── Interpolate a point ────────────────────────────────────────────────────────
+interpolate_depth = float(input(
+    "Enter the depth at which you want to interpolate a point (in microns): "))
 
-# # Interpolate a point: given a depth, find the corresponding white pixel percentage
+x = depths
+y = white_percents
 
-# interpolate_depth = float(input(colored(
-#     "Enter the depth at which you want to interpolate a point (in microns): ", "yellow")))
+i = interp1d(x, y, kind='linear')
+interpolate_point = float(i(interpolate_depth))
+print(f"The interpolated point is at the x-coordinate {interpolate_depth} "
+      f"and y-coordinate {interpolate_point}.")
 
-# x = depths
-# y = white_percents
+depths_i = depths[:]
+depths_i.append(interpolate_depth)
+white_percents_i = white_percents[:]
+white_percents_i.append(interpolate_point)
 
-# # You can also use 'quadratic', 'cubic', etc.
-# i = interp1d(x, y, kind='linear')
-# interpolate_point = i(interpolate_depth)
-# print(colored(
-#     f'The interpolated point is at the x-coordinate {interpolate_depth} and y-coordinate {interpolate_point}.', "green"))
+# ── Plotting ───────────────────────────────────────────────────────────────────
+fig, axs = plt.subplots(2, 1)
 
-# depths_i = depths[:]
-# depths_i.append(interpolate_depth)
-# white_percents_i = white_percents[:]
-# white_percents_i.append(interpolate_point)
+axs[0].scatter(depths, white_percents, marker='o', color='blue')
+axs[0].set_title('Plot of depth of image vs percentage white pixels')
+axs[0].set_xlabel('depth of image (in microns)')
+axs[0].set_ylabel('white pixels as a percentage of total pixels')
+axs[0].grid(True)
 
+axs[1].scatter(depths_i, white_percents_i, marker='o', color='blue')
+axs[1].set_title(
+    'Plot of depth of image vs percentage white pixels with interpolated point (in red)')
+axs[1].set_xlabel('depth of image (in microns)')
+axs[1].set_ylabel('white pixels as a percentage of total pixels')
+axs[1].grid(True)
+axs[1].scatter(depths_i[-1], white_percents_i[-1],
+               color='red', s=100, label='Highlighted point')
+axs[1].legend()
 
-# # make two plots: one that doesn't contain the interpolated point, just the data calculated from your images, and one that also contains the interpolated point (shown in red)
-# fig, axs = plt.subplots(2, 1)
-
-# axs[0].scatter(depths, white_percents, marker='o', linestyle='-', color='blue')
-# axs[0].set_title('Plot of depth of image vs percentage white pixels')
-# axs[0].set_xlabel('depth of image (in microns)')
-# axs[0].set_ylabel('white pixels as a percentage of total pixels')
-# axs[0].grid(True)
-
-
-# axs[1].scatter(depths_i, white_percents_i, marker='o',
-#                linestyle='-', color='blue')
-# axs[1].set_title(
-#     'Plot of depth of image vs percentage white pixels with interpolated point (in red)')
-# axs[1].set_xlabel('depth of image (in microns)')
-# axs[1].set_ylabel('white pixels as a percentage of total pixels')
-# axs[1].grid(True)
-# axs[1].scatter(depths_i[len(depths_i)-1], white_percents_i[len(white_percents_i)-1],
-#                color='red', s=100, label='Highlighted point')
-
-
-# # Adjust layout to prevent overlap
-# plt.tight_layout()
-# plt.show()
+plt.tight_layout()
+plt.show()
