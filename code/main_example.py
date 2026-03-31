@@ -2,6 +2,7 @@
 Module 3: Count black and white pixels, compute the percentage of white pixels
 in .jpg images, and write results to a .csv file.
 """
+# small change to prompt a pr
 
 import cv2
 import numpy as np
